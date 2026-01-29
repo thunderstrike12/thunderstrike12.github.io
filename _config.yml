@@ -1,32 +1,32 @@
 # Site Settings
-title: Your Name
+title: Loek van der Beele
 description: I craft digital experiences that blend beautiful design with powerful functionality.
-url: "https://yourusername.github.io"
+url: "https://thunderstrike12.github.io"
 baseurl: ""
 
 # Your Info
 author:
-  name: Your Name
-  email: you@email.com
-  tagline: "Available for freelance work"
-  bio: "I craft digital experiences that blend beautiful design with powerful functionality."
+  name: Loek van der Beele
+  email: loekvanderbeele@email.com
+  tagline: "Game Programmer"
+  bio: "Game Programmer at BUas Y3"
 
 # Social Links
 social:
-  github: https://github.com/yourusername
-  linkedin: https://linkedin.com/in/yourusername
-  email: mailto:you@email.com
+  github: https://github.com/thunderstrike12
+  linkedin: https://www.linkedin.com/in/loek-van-der-beele-12b634340/
+  email: mailto:loekvanderbeele@email.com
 
 # Skills (shown in hero section)
 skills:
   - icon: code
-    label: Full Stack Dev
+    label: Gameplay Programming
     description: React, Node, Python
   - icon: palette
-    label: UI/UX Design
+    label: AI Programming
     description: Figma, Motion
   - icon: zap
-    label: Performance
+    label: Physics Programming
     description: Optimization Expert
 
 # Collections
