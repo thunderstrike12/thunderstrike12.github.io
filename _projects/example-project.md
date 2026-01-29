@@ -4,7 +4,7 @@ title: AI Dashboard
 description: Real-time analytics dashboard with ML predictions
 category: Web App
 icon: 🤖
-gradient: gradient-violet
+color: color-purple
 tags:
   - React
   - Python
@@ -41,5 +41,3 @@ The frontend is built with React and uses D3.js for custom visualizations. The b
 - 40% faster decision-making for the client
 - 95% prediction accuracy on key metrics
 - Reduced data analysis time from hours to minutes
-
-hi

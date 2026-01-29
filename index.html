@@ -3,89 +3,103 @@ layout: default
 title: Home
 ---
 
-<!-- Hero Section -->
+<!-- Header -->
+<header class="header">
+  <a href="/" class="logo">{{ site.author.name }}</a>
+  <nav class="nav">
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+    <a href="{{ site.social.github }}">GitHub</a>
+  </nav>
+</header>
+
+<!-- Hero -->
 <section class="hero">
-  <div class="hero-bg">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-  </div>
-  
   <div class="hero-content">
-    <span class="badge">✨ {{ site.author.tagline }}</span>
+    <span class="hero-label">{{ site.author.tagline }}</span>
     <h1>{{ site.author.name }}</h1>
-    <p class="hero-tagline">{{ site.author.bio }}</p>
+    <p class="hero-bio">{{ site.author.bio }}</p>
     
-    <div class="skills">
+    <div class="hero-skills">
       {% for skill in site.skills %}
       <div class="skill">
         <div class="skill-icon">
           {% include icons/{{ skill.icon }}.svg %}
         </div>
-        <div class="skill-label">{{ skill.label }}</div>
-        <div class="skill-desc">{{ skill.description }}</div>
+        <span>{{ skill.label }}</span>
       </div>
       {% endfor %}
     </div>
     
-    <div class="btn-group">
-      <a href="#projects" class="btn btn-primary">View My Work</a>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-primary">View Work</a>
       <a href="#contact" class="btn btn-secondary">Get in Touch</a>
     </div>
   </div>
   
-  <a href="#projects" class="scroll-hint">
+  <div class="scroll-hint">
+    <span>Scroll</span>
     {% include icons/chevron-down.svg %}
-  </a>
+  </div>
 </section>
 
-<!-- Projects Section -->
-<section id="projects">
-  <div class="container">
-    <h2 class="section-title">Featured Projects</h2>
-    <p class="section-subtitle">A selection of work I'm proud of — from concept to deployment.</p>
-    
-    {% assign categories = site.projects | map: "category" | uniq %}
-    <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      {% for category in categories %}
-      <button class="filter-btn" data-filter="{{ category | slugify }}">{{ category }}</button>
-      {% endfor %}
-    </div>
-    
-    <div class="projects-grid">
-      {% for project in site.projects %}
-      <a href="{{ project.url }}" class="project-card" data-category="{{ project.category | slugify }}">
-        <div class="project-icon {{ project.gradient }}">{{ project.icon }}</div>
-        <div class="project-category">{{ project.category }}</div>
-        <h3>{{ project.title }}</h3>
-        <p>{{ project.description }}</p>
-        <div class="tags">
-          {% for tag in project.tags limit:3 %}
-          <span class="tag">{{ tag }}</span>
-          {% endfor %}
+<!-- Projects -->
+<section id="work" class="projects-section">
+  <div class="section-header">
+    <p class="section-label">Featured Work</p>
+    <h2>Selected Projects</h2>
+  </div>
+  
+  <div class="projects-scroll">
+    {% assign placeholders = "placeholder-1,placeholder-2,placeholder-3,placeholder-4,placeholder-5,placeholder-6" | split: "," %}
+    {% for project in site.projects %}
+    {% assign placeholder_index = forloop.index0 | modulo: 6 %}
+    <a href="{{ project.url }}" class="project-card">
+      <div class="card-inner">
+        <div class="card-image {{ placeholders[placeholder_index] }}">
+          {% if project.image %}
+          <img src="{{ project.image }}" alt="{{ project.title }}">
+          {% endif %}
         </div>
-      </a>
-      {% endfor %}
-    </div>
+        <div class="card-shadow"></div>
+        <div class="card-title-preview">
+          <h4>{{ project.title }}</h4>
+          <div class="card-tags">
+            {% assign tag_colors = "tag-blue,tag-green,tag-purple,tag-orange,tag-pink,tag-teal" | split: "," %}
+            {% for tag in project.tags limit:3 %}
+            {% assign color_index = forloop.index0 | modulo: 6 %}
+            <span class="tag {{ tag_colors[color_index] }}">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <p class="card-category">{{ project.category }}</p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
   </div>
 </section>
 
-<!-- Contact Section -->
-<section id="contact" class="contact">
-  <div class="container">
-    <h2 class="section-title">Let's Build Something</h2>
-    <p class="section-subtitle">Have a project in mind? I'd love to hear about it.</p>
-    
-    <div class="social-links">
-      <a href="{{ site.social.email }}" class="social-link" aria-label="Email">
-        {% include icons/mail.svg %}
-      </a>
-      <a href="{{ site.social.github }}" class="social-link" aria-label="GitHub">
-        {% include icons/github.svg %}
-      </a>
-      <a href="{{ site.social.linkedin }}" class="social-link" aria-label="LinkedIn">
-        {% include icons/linkedin.svg %}
-      </a>
-    </div>
+<!-- Contact -->
+<section id="contact" class="contact-section">
+  <h2>Let's Connect</h2>
+  <p>Have a project in mind? I'd love to hear about it.</p>
+  <div class="social-links">
+    <a href="{{ site.social.email }}" class="social-link" aria-label="Email">
+      {% include icons/mail.svg %}
+    </a>
+    <a href="{{ site.social.github }}" class="social-link" aria-label="GitHub">
+      {% include icons/github.svg %}
+    </a>
+    <a href="{{ site.social.linkedin }}" class="social-link" aria-label="LinkedIn">
+      {% include icons/linkedin.svg %}
+    </a>
   </div>
 </section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© {{ 'now' | date: "%Y" }} {{ site.author.name }}</p>
+</footer>
