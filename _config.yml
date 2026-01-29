@@ -1,0 +1,48 @@
+# Site Settings
+title: Your Name
+description: I craft digital experiences that blend beautiful design with powerful functionality.
+url: "https://yourusername.github.io"
+baseurl: ""
+
+# Your Info
+author:
+  name: Your Name
+  email: you@email.com
+  tagline: "Available for freelance work"
+  bio: "I craft digital experiences that blend beautiful design with powerful functionality."
+
+# Social Links
+social:
+  github: https://github.com/yourusername
+  linkedin: https://linkedin.com/in/yourusername
+  email: mailto:you@email.com
+
+# Skills (shown in hero section)
+skills:
+  - icon: code
+    label: Full Stack Dev
+    description: React, Node, Python
+  - icon: palette
+    label: UI/UX Design
+    description: Figma, Motion
+  - icon: zap
+    label: Performance
+    description: Optimization Expert
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+# Build Settings
+markdown: kramdown
+sass:
+  style: compressed
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - node_modules
