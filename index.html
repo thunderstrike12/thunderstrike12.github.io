@@ -16,6 +16,14 @@ title: Home
 <!-- Hero -->
 <section class="hero">
   <div class="hero-content">
+    <div class="hero-image">
+      {% if site.author.image %}
+      <img src="{{ site.author.image }}" alt="{{ site.author.name }}">
+      {% else %}
+      <div class="hero-image-placeholder">👤</div>
+      {% endif %}
+    </div>
+    
     <span class="hero-label">{{ site.author.tagline }}</span>
     <h1>{{ site.author.name }}</h1>
     <p class="hero-bio">{{ site.author.bio }}</p>

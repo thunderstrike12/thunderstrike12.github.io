@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Kinematics</title>
+  <meta name="description" content="kinematics in BEE">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Inverse Kinematics | Loek van der Beele</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Inverse Kinematics" />
+<meta name="author" content="Loek van der Beele" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="kinematics in BEE" />
+<meta property="og:description" content="kinematics in BEE" />
+<link rel="canonical" href="http://localhost:4000/projects/inverse-kinematics/" />
+<meta property="og:url" content="http://localhost:4000/projects/inverse-kinematics/" />
+<meta property="og:site_name" content="Loek van der Beele" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-01-29T22:24:11+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Inverse Kinematics" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-01-29T22:24:11+01:00","datePublished":"2026-01-29T22:24:11+01:00","description":"kinematics in BEE","headline":"Inverse Kinematics","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/inverse-kinematics/"},"url":"http://localhost:4000/projects/inverse-kinematics/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<body>
+  <!-- Header -->
+<header class="header">
+  <a href="/" class="logo">Loek van der Beele</a>
+  <nav class="nav">
+    <a href="/#work">Work</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://github.com/thunderstrike12">GitHub</a>
+  </nav>
+</header>
+
+<!-- Project Hero -->
+<section class="project-hero">
+  <div class="project-hero-inner">
+    <a href="/#work" class="back-link">
+      ← Back to Projects
+    </a>
+    
+    <h1>Inverse Kinematics</h1>
+    
+    <div class="project-meta">
+      <span class="project-category-badge">Tools programming</span>
+      <div class="card-tags">
+        
+        <span class="tag">React</span>
+        
+        <span class="tag">Python</span>
+        
+        <span class="tag">TensorFlow</span>
+        
+        <span class="tag">D3.js</span>
+        
+      </div>
+    </div>
+    
+    <p class="project-description">kinematics in BEE</p>
+    
+    <div class="project-links">
+      
+      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
+        Live Demo
+      </a>
+      
+      
+      <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
+        View Code
+      </a>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Project Content -->
+<article class="project-content">
+  <h3 id="introduction">Introduction</h3>
+
+<p>In this post about Inverse Kinematics I will demonstrate how I’ve made my Inverse Kinematics. An important heads up is that I am using an ECS and the algorithm I used for my Inverse Kinematics is the FABRIK algorithm.</p>
+
+<div style="text-align: center;">
+  <a href="#forward-kinematics">forward kinematics</a> 
+<br />
+  <a href="#inverse-kinematics">inverse kinematics</a>  
+<br />
+  <a href="#loading-rigs-from-blender">loading rigs</a>
+</div>
+
+<h3 id="forward-kinematics">Forward kinematics</h3>
+
+<p>Before we get into the actual Inverse Kinematics we will first take a look at some 2D forward kinematcs. The algorithm for forward kinematics is quite simple. All I do is give one segment an angle to rotate with and all following segments will rotate with the same angle. After this we move every segment to the end of the previous segment. In code That looks something like this:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">t1_curr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Transform</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+        <span class="k">auto</span> <span class="n">t1_prev</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">();</span>
+        <span class="k">auto</span> <span class="n">s1_prev</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">t1_prev</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Transform</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+            <span class="n">s1_prev</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Segment</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+            <span class="n">t1_curr</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">t1_prev</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">t1_prev</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span> <span class="o">*</span> <span class="n">s1_prev</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">t1_curr</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">angle</span> <span class="o">*</span> <span class="n">t1_curr</span><span class="o">-&gt;</span><span class="n">GetRotation</span><span class="p">());</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Before I do that, I also do a check to see if the angle is greater than the maximum angle the segment can go. To do this, I get the current angle between two quaternions. If the angle has passed the maximum, I check if the new angle is smaller than both the maximum angle and the old rotation, otherwise I clamp the new rotation to the maximum angle. This is to make sure that the arm does not get stuck past the max angle because it isn’t allowed to move anymore. Below you can see what that looks like in code:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kt">float</span> <span class="n">dot_product</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">dot</span><span class="p">(</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">GetRotation</span><span class="p">()),</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t_prev</span><span class="o">-&gt;</span><span class="n">GetRotation</span><span class="p">()));</span>
+<span class="kt">float</span> <span class="n">old_angle</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">acos</span><span class="p">(</span><span class="n">dot_product</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">old_angle</span> <span class="o">&gt;</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">max_angle</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Transform</span> <span class="n">test_t</span> <span class="o">=</span> <span class="o">*</span><span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">try_get</span><span class="o">&lt;</span><span class="n">Transform</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">test_t</span><span class="p">.</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">angle</span> <span class="o">*</span> <span class="n">test_t</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">());</span>
+    <span class="n">dot_product</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">dot</span><span class="p">(</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">test_t</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()),</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t_prev</span><span class="o">-&gt;</span><span class="n">GetRotation</span><span class="p">()));</span>
+    <span class="kt">float</span> <span class="n">new_angle</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">acos</span><span class="p">(</span><span class="n">dot_product</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">new_angle</span> <span class="o">&gt;</span> <span class="n">old_angle</span><span class="p">)</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">angle</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>And a GIF  of forward kinematics in action:</p>
+
+<p><img src="../assets/images/forward_kinematics.gif" alt="fwd_kine" /></p>
+
+<h3 id="inverse-kinematics">Inverse Kinematics</h3>
+
+<p><img src="../assets/images/visual.png" alt="visual" /></p>
+
+<p><small>Note: this is which segment I mean with next or previous in the code. This is both in the forward and backwards reaching parts to avoid confusion while working on the algorithm.</small></p>
+
+<p>To control where the arm starts we have a base, and the location the arm should try to reach is the (end)effector. Below I’ll explain how they together guide the arm to it’s position.</p>
+
+<p>For the FABRIK algorithm, there are two main parts; the forward reaching and backwards reaching part. In the forward reaching part I set each segments position equal to the previous segments end position, and I point the segment to the base of the next segment.</p>
+
+<p>For the segment at the end of the arm, I set it’s position equal to the effector instead. And for the segment connected to the base, I point it to the base instead.</p>
+
+<p>All this can be seen below. Note that this is a very simplified version of the actual code.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">effector</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">effector</span> <span class="o">-</span> <span class="n">t_next</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">())</span> <span class="o">*</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">t_prev</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">t_prev</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span> <span class="o">*</span> <span class="n">s_prev</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">-</span> <span class="n">arm</span><span class="p">.</span><span class="n">base</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">t_prev</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">t_prev</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span> <span class="o">*</span> <span class="n">s_prev</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_next</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">())</span> <span class="o">*</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>For the backwards part, I set the segment equal to end point of the next segment and point it to the base of the previous segment. Pretty similar to the previous loop, but an important difference here is that this loop increments i after each iteration, instead of decrementing, like in the previous loop.</p>
+
+<p>In this loop the segment at the end of the arm it points to the effector instead of the base of the previous segment. The position of the segment at the base of the arm is set equal to the base of the arm instead of the end point of the next segment.</p>
+
+<p>The code for the backwards part can be seen below.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">arm</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">t_next</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">t_next</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span> <span class="o">*</span> <span class="n">s_next</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">-</span> <span class="n">arm</span><span class="p">.</span><span class="n">effector</span><span class="p">));</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">base</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">arm</span><span class="p">.</span><span class="n">base</span> <span class="o">-</span> <span class="n">t_prev</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()));</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">t_next</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">t_next</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span> <span class="o">*</span> <span class="n">s_next</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+            <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_prev</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()));</span>
+            <span class="n">t</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">DirectionToQuaternion</span><span class="p">(</span><span class="n">dir</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>To add a segment to an arm I have made a function to add a segment to it’s respective arm. This function can be seen below. This is to make the library a lot more usable.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">ArmInverse</span><span class="o">::</span><span class="n">AddSegment</span><span class="p">(</span><span class="kt">float</span> <span class="n">length</span><span class="p">,</span> <span class="kt">float</span> <span class="n">width</span><span class="p">,</span> <span class="kt">float</span> <span class="n">max_angle</span><span class="p">,</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">preferred_direction</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_path</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">segment_entity</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateEntity</span><span class="p">();</span>
+    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">seg</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">Segment</span><span class="o">&gt;</span><span class="p">(</span><span class="n">segment_entity</span><span class="p">);</span>
+    <span class="n">seg</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
+    <span class="n">seg</span><span class="p">.</span><span class="n">max_angle</span> <span class="o">=</span> <span class="n">max_angle</span><span class="p">;</span>
+    <span class="n">seg</span><span class="p">.</span><span class="n">preferred_direction</span> <span class="o">=</span> <span class="n">preferred_direction</span><span class="p">;</span>
+    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">bee</span><span class="o">::</span><span class="n">Transform</span><span class="o">&gt;</span><span class="p">(</span><span class="n">segment_entity</span><span class="p">);</span>
+    <span class="n">trans</span><span class="p">.</span><span class="n">SetScale</span><span class="p">({</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">});</span>
+    <span class="n">segment</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">segment_entity</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">file_path</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">auto</span><span class="o">&amp;</span> <span class="n">mesh_renderer</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">bee</span><span class="o">::</span><span class="n">MeshRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">segment_entity</span><span class="p">);</span>
+        <span class="k">auto</span> <span class="n">box_model</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">Resources</span><span class="p">().</span><span class="n">Load</span><span class="o">&lt;</span><span class="n">bee</span><span class="o">::</span><span class="n">Model</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bee</span><span class="o">::</span><span class="n">FileIO</span><span class="o">::</span><span class="n">Directory</span><span class="o">::</span><span class="n">SharedAssets</span><span class="p">,</span> <span class="n">file_path</span><span class="p">);</span>
+        <span class="n">mesh_renderer</span><span class="p">.</span><span class="n">Material</span> <span class="o">=</span> <span class="n">box_model</span><span class="o">-&gt;</span><span class="n">GetMaterials</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">mesh_renderer</span><span class="p">.</span><span class="n">Mesh</span> <span class="o">=</span> <span class="n">box_model</span><span class="o">-&gt;</span><span class="n">GetMeshes</span><span class="p">()[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">seg</span><span class="p">.</span><span class="n">has_model</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is what all that together can make;</p>
+
+<p><img src="../assets/images/long_arm.gif" alt="ik in action" /></p>
+
+<h3 id="loading-rigs-from-blender">Loading rigs from Blender</h3>
+
+<p>For the loading of the rigs from blender, I first read the file, and store all the bones in a vector with all the data I will need. To do this, I first check if I’m in a nodes section, and if I am, I can start looking for bones, until I leave the nodes section.</p>
+
+<p>This can be seen below;</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Rig</span><span class="o">::</span><span class="n">Rig</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_path</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">FileIO</span><span class="p">().</span><span class="n">ReadTextFile</span><span class="p">(</span><span class="n">FileIO</span><span class="o">::</span><span class="n">Directory</span><span class="o">::</span><span class="n">SharedAssets</span><span class="p">,</span> <span class="n">file_path</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">stream</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">in_nodes_section</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">current_translation</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">id_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"</span><span class="se">\"</span><span class="s">nodes</span><span class="se">\"</span><span class="s">"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">in_nodes_section</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">in_nodes_section</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"skins"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">in_nodes_section</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="p">}</span>
+</code></pre></div></div>
+<p>When we’re in the nodes section, we can start looking for bones. When we find a bone, we add it to a vector and store it’s useful data with it.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"{"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">bones</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">id_count</span><span class="p">});</span>
+                <span class="n">id_count</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"</span><span class="se">\"</span><span class="s">name</span><span class="se">\"</span><span class="s">:</span><span class="se">\"</span><span class="s">Bone"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="n">RemoveNonNumbers</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+                <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">name</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="n">bones</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+            <span class="p">}</span>
+</code></pre></div></div>
+<p>For the children we loop until we hit a closing bracket and then add the whole vector of children to the bone.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"children"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">;</span>
+
+                <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="n">value</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">remove_if</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">value</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="o">::</span><span class="n">isspace</span><span class="p">),</span> <span class="n">value</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"]"</span><span class="p">)</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="k">else</span>
+                    <span class="p">{</span>
+                        <span class="n">bones</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">child</span> <span class="o">=</span> <span class="n">values</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+</code></pre></div></div>
+<p>For the translation a similar thing, however, here we can stop when we have 3 values because that’s all a 3D position will give us.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"</span><span class="se">\"</span><span class="s">translation</span><span class="se">\"</span><span class="s">"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">;</span>
+
+                <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="n">value</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">remove_if</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">value</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="o">::</span><span class="n">isspace</span><span class="p">),</span> <span class="n">value</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">value</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+                    <span class="p">{</span>
+                        <span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stof</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">current_translation</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+                        <span class="n">bones</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">translation</span> <span class="o">=</span> <span class="n">current_translation</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+<p>lastly, I will assert if <code class="language-plaintext highlighter-rouge">bones</code> is empty, because this means the file that has been passed is invalid.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">pop_back()</code> at the end is because before going into the skins section there is an armature section, wich it will also store. We can just simply remove the last element to fix this, because every file has this.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">assert</span><span class="p">(</span><span class="o">!</span><span class="n">bones</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="s">"invalid file"</span><span class="p">);</span>
+    <span class="n">bones</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+</code></pre></div></div>
+
+<div style="text-align: center;">
+  <img src="../assets/images/visual2.png" alt="visual2" width="180px" height="300px" />
+</div>
+
+<p>Next I determine what the parent should be for every bone. In the same loop, I also create new arms if the arm splits up into 2 or more other arms. For this, I need to make a new arm entity, which can be seen above. Every arm that splits off into multiple arms is it’s own arm, that in turn can have as many segments as needed. In the image above every color represents it’s own arm, and in the code below I generate an arm eveytime there is a split.</p>
+
+<p>The reason there needs to be a split is because the algorithm is not made for seperate arms, and this allows for maximum control of the rig. We can now fully control where the head is for example. After the rig is loaded you will be able to access the end point of the arm that is the head and you can move it around and it will just work.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">int</span> <span class="n">arm_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">bones</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">[</span><span class="n">j</span><span class="p">]].</span><span class="n">isNewArm</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">[</span><span class="n">j</span><span class="p">]].</span><span class="n">is_added</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="n">arm_entity</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">entt</span><span class="o">::</span><span class="n">null</span><span class="p">);</span>
+                <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateEntity</span><span class="p">();</span>
+                <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]);</span>
+                <span class="n">arm_comp</span><span class="p">.</span><span class="n">AddSegment</span><span class="p">(</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="s">"models/BoxAndCylinder.gltf"</span><span class="p">);</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">[</span><span class="n">j</span><span class="p">]].</span><span class="n">arm_entity</span> <span class="o">=</span> <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">];</span>
+                <span class="n">arm_count</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">bone_id</span> <span class="o">=</span> <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+            <span class="n">bones</span><span class="p">[</span><span class="n">bone_id</span><span class="p">].</span><span class="n">parent</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>To make sure we have all the arms, we also need to make sure we have the starting points of an arm, not were there is a split, but if a bone does not have a parent, that is where we also need to add an arm entity. It is possible we handle a child of such a segment before the arm is created. in this case, we need to go to said segment(the parent of the segment we’re currently handling), create the arm, and then add the segment for it, after that we can add the segment we initially wanted to add.</p>
+
+<p>After this loop we have created all the segments we wanted to add.</p>
+
+<p>The code can be seen below;</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">bones</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">is_added</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parent</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">isNewArm</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">is_added</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="n">arm_entity</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">entt</span><span class="o">::</span><span class="n">null</span><span class="p">);</span>
+                <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateEntity</span><span class="p">();</span>
+                <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]);</span>
+                <span class="n">arm_comp</span><span class="p">.</span><span class="n">AddSegment</span><span class="p">(</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="s">"models/BoxAndCylinder.gltf"</span><span class="p">);</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arm_entity</span> <span class="o">=</span> <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">];</span>
+                <span class="n">arm_count</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">is_added</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">bones</span><span class="p">[</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parent</span><span class="p">].</span><span class="n">arm_entity</span> <span class="o">==</span> <span class="n">entt</span><span class="o">::</span><span class="n">null</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="kt">int</span> <span class="n">parent_id</span> <span class="o">=</span> <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parent</span><span class="p">;</span>
+                    <span class="n">bones</span><span class="p">[</span><span class="n">parent_id</span><span class="p">].</span><span class="n">is_added</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                    <span class="n">arm_entity</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">entt</span><span class="o">::</span><span class="n">null</span><span class="p">);</span>
+                    <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateEntity</span><span class="p">();</span>
+                    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">CreateComponent</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">]);</span>
+                    <span class="n">arm_comp</span><span class="p">.</span><span class="n">AddSegment</span><span class="p">(</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="s">"models/BoxAndCylinder.gltf"</span><span class="p">);</span>
+                    <span class="n">bones</span><span class="p">[</span><span class="n">parent_id</span><span class="p">].</span><span class="n">arm_entity</span> <span class="o">=</span> <span class="n">arm_entity</span><span class="p">[</span><span class="n">arm_count</span><span class="p">];</span>
+                    <span class="n">arm_count</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arm_entity</span> <span class="o">=</span> <span class="n">bones</span><span class="p">[</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parent</span><span class="p">].</span><span class="n">arm_entity</span><span class="p">;</span>
+                <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arm_entity</span><span class="p">);</span>
+                <span class="n">arm_comp</span><span class="p">.</span><span class="n">AddSegment</span><span class="p">(</span><span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="s">"models/BoxAndCylinder.gltf"</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To make sure all the seperate arms stick together there is a rig manager system that updates all the rigs to stick all the arms together at the correct position.</p>
+
+<p>code for this can be seen below;</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">RigManager</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="p">[</span><span class="n">entity</span><span class="p">,</span> <span class="n">rig</span><span class="p">]</span> <span class="o">:</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">view</span><span class="o">&lt;</span><span class="n">Rig</span><span class="o">&gt;</span><span class="p">().</span><span class="n">each</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arm_entity</span><span class="p">);</span>
+                    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">arm_comp1</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">child</span><span class="p">[</span><span class="n">j</span><span class="p">]].</span><span class="n">arm_entity</span><span class="p">);</span>
+
+                    <span class="k">auto</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Transform</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm_comp</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">arm_comp</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]);</span>
+                    <span class="k">auto</span> <span class="n">seg</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Segment</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arm_comp</span><span class="p">.</span><span class="n">segment</span><span class="p">[</span><span class="n">arm_comp</span><span class="p">.</span><span class="n">segment</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]);</span>
+                    <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">forward</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+                    <span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">trans</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">()</span> <span class="o">+</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">trans</span><span class="p">.</span><span class="n">GetRotation</span><span class="p">()</span> <span class="o">*</span> <span class="n">forward</span><span class="p">)</span> <span class="o">*</span> <span class="n">seg</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+
+                    <span class="n">arm_comp1</span><span class="p">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+</code></pre></div></div>
+<p>If a bone doesn’t have a parent we can just stick it to the base.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">parent</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">Engine</span><span class="p">.</span><span class="n">ECS</span><span class="p">().</span><span class="n">Registry</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">ArmInverse</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rig</span><span class="p">.</span><span class="n">bones</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arm_entity</span><span class="p">).</span><span class="n">base</span> <span class="o">=</span> <span class="n">rig</span><span class="p">.</span><span class="n">base</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now that we can load rigs from blender, all we have to do is write some code to control the effectors and the base of the rig, and we have a walking animation!</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//for every end point</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span><span class="p">;</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="n">f</span> <span class="o">&amp;&amp;</span> <span class="n">state</span> <span class="o">==</span> <span class="n">MOVING</span> <span class="o">||</span> <span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="n">f</span> <span class="o">&amp;&amp;</span> <span class="n">state</span> <span class="o">==</span> <span class="n">ROTATING</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">t</span> <span class="o">-=</span> <span class="mf">0.7</span><span class="n">f</span><span class="p">;</span>
+
+		<span class="n">glm</span><span class="o">::</span><span class="n">vec3</span> <span class="n">dir</span> <span class="o">=</span> <span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">relative_to_body</span> <span class="o">-</span> <span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">eff</span><span class="p">;</span>
+		<span class="kt">float</span> <span class="n">length</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">length</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+		<span class="n">dir</span> <span class="o">=</span> <span class="n">glm</span><span class="o">::</span><span class="n">normalize</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+		<span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">eff</span> <span class="o">=</span> <span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">relative_to_body</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">eff</span> <span class="o">+=</span> <span class="n">dir</span> <span class="o">*</span> <span class="mf">1.2</span><span class="n">f</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="n">STATIONARY</span><span class="p">)</span> <span class="p">{</span>
+		<span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">eff</span> <span class="o">=</span> <span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="n">end</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">relative_to_body</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">Engine</span><span class="p">.</span><span class="n">DebugRenderer</span><span class="p">().</span><span class="n">AddCircle</span><span class="p">(</span><span class="n">bee</span><span class="o">::</span><span class="n">DebugCategory</span><span class="o">::</span><span class="n">Gameplay</span><span class="p">,</span> <span class="n">arm</span><span class="p">.</span><span class="n">effector</span><span class="p">,</span> <span class="mf">0.2</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">});</span>
+	<span class="n">Engine</span><span class="p">.</span><span class="n">DebugRenderer</span><span class="p">().</span><span class="n">AddCircle</span><span class="p">(</span><span class="n">bee</span><span class="o">::</span><span class="n">DebugCategory</span><span class="o">::</span><span class="n">Gameplay</span><span class="p">,</span> <span class="n">arm</span><span class="p">.</span><span class="n">effector_target</span> <span class="o">+</span> <span class="mf">0.01</span><span class="n">f</span> <span class="o">*</span> <span class="n">i</span><span class="p">,</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">,</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">});</span>
+<span class="p">}</span>
+<span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">HEAD</span><span class="p">].</span><span class="n">eff</span> <span class="o">=</span> <span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="n">end</span><span class="p">[</span><span class="n">HEAD</span><span class="p">].</span><span class="n">relative_to_body</span><span class="p">;</span>
+<span class="o">*</span><span class="n">end</span><span class="p">[</span><span class="n">HEAD</span><span class="p">].</span><span class="n">eff</span> <span class="o">+=</span> <span class="n">facing_dir</span> <span class="o">*</span> <span class="mf">0.3</span><span class="n">f</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>And that will look something like this;</p>
+
+<p><img src="../assets/images/human_walk.gif" alt="walk" /></p>
+
+</article>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2026 Loek van der Beele</p>
+</footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
