@@ -19,12 +19,14 @@
 <link rel="canonical" href="http://localhost:4000/projects/inverse-kinematics/" />
 <meta property="og:url" content="http://localhost:4000/projects/inverse-kinematics/" />
 <meta property="og:site_name" content="Loek van der Beele" />
+<meta property="og:image" content="http://localhost:4000/assets/images/ik.gif" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-01-29T22:24:11+01:00" />
-<meta name="twitter:card" content="summary" />
+<meta property="article:published_time" content="2026-01-29T22:50:38+01:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/ik.gif" />
 <meta property="twitter:title" content="Inverse Kinematics" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-01-29T22:24:11+01:00","datePublished":"2026-01-29T22:24:11+01:00","description":"kinematics in BEE","headline":"Inverse Kinematics","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/inverse-kinematics/"},"url":"http://localhost:4000/projects/inverse-kinematics/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-01-29T22:50:38+01:00","datePublished":"2026-01-29T22:50:38+01:00","description":"kinematics in BEE","headline":"Inverse Kinematics","image":"http://localhost:4000/assets/images/ik.gif","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/inverse-kinematics/"},"url":"http://localhost:4000/projects/inverse-kinematics/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -52,13 +54,11 @@
       <span class="project-category-badge">Tools programming</span>
       <div class="card-tags">
         
-        <span class="tag">React</span>
+        <span class="tag">BEE</span>
         
-        <span class="tag">Python</span>
+        <span class="tag">C++</span>
         
-        <span class="tag">TensorFlow</span>
-        
-        <span class="tag">D3.js</span>
+        <span class="tag">Blender</span>
         
       </div>
     </div>
@@ -66,10 +66,6 @@
     <p class="project-description">kinematics in BEE</p>
     
     <div class="project-links">
-      
-      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
-        Live Demo
-      </a>
       
       
       <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
@@ -86,12 +82,10 @@
 
 <p>In this post about Inverse Kinematics I will demonstrate how I’ve made my Inverse Kinematics. An important heads up is that I am using an ECS and the algorithm I used for my Inverse Kinematics is the FABRIK algorithm.</p>
 
-<div style="text-align: center;">
-  <a href="#forward-kinematics">forward kinematics</a> 
-<br />
-  <a href="#inverse-kinematics">inverse kinematics</a>  
-<br />
-  <a href="#loading-rigs-from-blender">loading rigs</a>
+<div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin: 2rem 0;">
+  <a href="#forward-kinematics" class="btn btn-secondary">Forward Kinematics</a>
+  <a href="#inverse-kinematics" class="btn btn-secondary">Inverse Kinematics</a>
+  <a href="#loading-rigs-from-blender" class="btn btn-secondary">Loading Rigs</a>
 </div>
 
 <h3 id="forward-kinematics">Forward kinematics</h3>
@@ -136,11 +130,11 @@
 
 <p>And a GIF  of forward kinematics in action:</p>
 
-<p><img src="../assets/images/forward_kinematics.gif" alt="fwd_kine" /></p>
+<p><img src="/assets/images/forward_kinematics.gif" alt="fwd_kine" /></p>
 
 <h3 id="inverse-kinematics">Inverse Kinematics</h3>
 
-<p><img src="../assets/images/visual.png" alt="visual" /></p>
+<p><img src="/assets/images/visual.png" alt="visual" /></p>
 
 <p><small>Note: this is which segment I mean with next or previous in the code. This is both in the forward and backwards reaching parts to avoid confusion while working on the algorithm.</small></p>
 
@@ -230,7 +224,7 @@
 
 <p>This is what all that together can make;</p>
 
-<p><img src="../assets/images/long_arm.gif" alt="ik in action" /></p>
+<p><img src="/assets/images/long_arm.gif" alt="ik in action" /></p>
 
 <h3 id="loading-rigs-from-blender">Loading rigs from Blender</h3>
 
@@ -330,7 +324,7 @@
 </code></pre></div></div>
 
 <div style="text-align: center;">
-  <img src="../assets/images/visual2.png" alt="visual2" width="180px" height="300px" />
+  <img src="/assets/images/visual2.png" alt="visual2" width="180px" height="300px" />
 </div>
 
 <p>Next I determine what the parent should be for every bone. In the same loop, I also create new arms if the arm splits up into 2 or more other arms. For this, I need to make a new arm entity, which can be seen above. Every arm that splits off into multiple arms is it’s own arm, that in turn can have as many segments as needed. In the image above every color represents it’s own arm, and in the code below I generate an arm eveytime there is a split.</p>
@@ -470,7 +464,7 @@
 
 <p>And that will look something like this;</p>
 
-<p><img src="../assets/images/human_walk.gif" alt="walk" /></p>
+<p><img src="/assets/images/human_walk.gif" alt="walk" /></p>
 
 </article>
 

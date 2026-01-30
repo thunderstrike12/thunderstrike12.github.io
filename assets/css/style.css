@@ -507,6 +507,16 @@ body {
   color: var(--text-muted);
 }
 .project-content li { margin-bottom: 0.5rem; }
+.project-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.project-content img.small { max-width: 300px; }
+.project-content img.medium { max-width: 500px; }
+.project-content img.full { width: 100%; }
 
 /* Responsive */
 @media (max-width: 768px) {

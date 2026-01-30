@@ -3,15 +3,14 @@ layout: project
 title: Inverse Kinematics
 description: kinematics in BEE
 category: Tools programming
+image: "/assets/images/ik.gif"
 icon: 🤖
 color: color-purple
 tags:
-  - React
-  - Python
-  - TensorFlow
-  - D3.js
+  - BEE
+  - C++
+  - Blender
 github: https://github.com/yourusername/ai-dashboard
-live: https://ai-dashboard-demo.com
 featured: true
 ---
 
@@ -19,12 +18,10 @@ featured: true
 
 In this post about Inverse Kinematics I will demonstrate how I've made my Inverse Kinematics. An important heads up is that I am using an ECS and the algorithm I used for my Inverse Kinematics is the FABRIK algorithm.
 
-<div style="text-align: center;">
-  <a href="#forward-kinematics">forward kinematics</a> 
-<br>
-  <a href="#inverse-kinematics">inverse kinematics</a>  
-<br>
-  <a href="#loading-rigs-from-blender">loading rigs</a>
+<div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin: 2rem 0;">
+  <a href="#forward-kinematics" class="btn btn-secondary">Forward Kinematics</a>
+  <a href="#inverse-kinematics" class="btn btn-secondary">Inverse Kinematics</a>
+  <a href="#loading-rigs-from-blender" class="btn btn-secondary">Loading Rigs</a>
 </div>
 
 ### Forward kinematics
@@ -71,12 +68,12 @@ if (old_angle > s->max_angle)
 
 And a GIF  of forward kinematics in action:
 
-![fwd_kine](../assets/images/forward_kinematics.gif)
+![fwd_kine](/assets/images/forward_kinematics.gif)
 
 
 ### Inverse Kinematics
 
-![visual](../assets/images/visual.png)
+![visual](/assets/images/visual.png)
 
 <small>Note: this is which segment I mean with next or previous in the code. This is both in the forward and backwards reaching parts to avoid confusion while working on the algorithm.</small>
 
@@ -169,7 +166,7 @@ void ArmInverse::AddSegment(float length, float width, float max_angle, glm::vec
 
 This is what all that together can make;
 
-![ik in action](../assets/images/long_arm.gif)
+![ik in action](/assets/images/long_arm.gif)
 
 ### Loading rigs from Blender
 
@@ -274,7 +271,7 @@ The `pop_back()` at the end is because before going into the skins section there
 ```
 
 <div style="text-align: center;">
-  <img src="../assets/images/visual2.png" alt="visual2" width="180px" height="300px" />
+  <img src="/assets/images/visual2.png" alt="visual2" width="180px" height="300px" />
 </div>
 
 Next I determine what the parent should be for every bone. In the same loop, I also create new arms if the arm splits up into 2 or more other arms. For this, I need to make a new arm entity, which can be seen above. Every arm that splits off into multiple arms is it's own arm, that in turn can have as many segments as needed. In the image above every color represents it's own arm, and in the code below I generate an arm eveytime there is a split.
@@ -419,4 +416,4 @@ for (int i = 0; i < 5; i++) {
 
 And that will look something like this;
 
-![walk](../assets/images/human_walk.gif)
+![walk](/assets/images/human_walk.gif)
