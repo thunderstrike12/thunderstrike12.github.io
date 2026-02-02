@@ -9,7 +9,7 @@ color: color-purple
 tags:
   - BEE
   - C++
-  - Blender
+  - january 2025
 github: https://github.com/yourusername/ai-dashboard
 featured: true
 ---

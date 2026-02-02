@@ -8,7 +8,7 @@ baseurl: ""
 author:
   name: Loek van der Beele
   email: loekvanderbeele@email.com
-  tagline: "Game Programmer"
+  tagline: 
   bio: "Game Programmer at BUas Y3"
   image: "/assets/images/profile.jpg"
 
