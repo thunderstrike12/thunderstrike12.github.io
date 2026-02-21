@@ -21,12 +21,12 @@
 <meta property="og:site_name" content="Loek van der Beele" />
 <meta property="og:image" content="http://localhost:4000/assets/images/ik.gif" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-02-21T15:03:50+01:00" />
+<meta property="article:published_time" content="2026-02-21T16:56:12+01:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="http://localhost:4000/assets/images/ik.gif" />
 <meta property="twitter:title" content="Inverse Kinematics" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T15:03:50+01:00","datePublished":"2026-02-21T15:03:50+01:00","description":"kinematics in BEE","headline":"Inverse Kinematics","image":"http://localhost:4000/assets/images/ik.gif","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/inverse-kinematics/"},"url":"http://localhost:4000/projects/inverse-kinematics/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T16:56:12+01:00","datePublished":"2026-02-21T16:56:12+01:00","description":"kinematics in BEE","headline":"Inverse Kinematics","image":"http://localhost:4000/assets/images/ik.gif","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/inverse-kinematics/"},"url":"http://localhost:4000/projects/inverse-kinematics/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -72,13 +72,26 @@
         View Code
       </a>
       
+      
     </div>
   </div>
 </section>
 
 <!-- Project Content -->
 <article class="project-content">
-  <h3 id="introduction">Introduction</h3>
+  <h2 id="overview">Overview</h2>
+
+<p>In this project I built an Inverse Kinematics system from scratch using the FABRIK algorithm. Going into this, I had some experience with forward kinematics but hadn’t implemented a full IK solution before. I started with basic 2D forward kinematics to understand segment chains, then moved on to the full 3D FABRIK implementation. Eventually I expanded the system to load rigs directly from Blender and animate them procedurally.</p>
+
+<div class="collage collage-c">
+    <img src="/assets/images/spider_walk.gif" alt="IK arm" />
+    <img src="/assets/images/forward_kinematics.gif" alt="Forward kinematics" />
+    <img src="/assets/images/human_walk.gif" alt="Walking animation" />
+</div>
+
+<h2 id="technical-breakdown">Technical Breakdown</h2>
+
+<h3 id="introduction">Introduction</h3>
 
 <p>In this post about Inverse Kinematics I will demonstrate how I’ve made my Inverse Kinematics. An important heads up is that I am using an ECS and the algorithm I used for my Inverse Kinematics is the FABRIK algorithm.</p>
 

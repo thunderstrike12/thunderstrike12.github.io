@@ -21,12 +21,12 @@
 <meta property="og:site_name" content="Loek van der Beele" />
 <meta property="og:image" content="http://localhost:4000/assets/images/ray_glass.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-02-21T15:03:50+01:00" />
+<meta property="article:published_time" content="2026-02-21T16:56:12+01:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="http://localhost:4000/assets/images/ray_glass.png" />
 <meta property="twitter:title" content="Raytracing" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T15:03:50+01:00","datePublished":"2026-02-21T15:03:50+01:00","description":"Raytracing in a Template project","headline":"Raytracing","image":"http://localhost:4000/assets/images/ray_glass.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/raytracing/"},"url":"http://localhost:4000/projects/raytracing/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T16:56:12+01:00","datePublished":"2026-02-21T16:56:12+01:00","description":"Raytracing in a Template project","headline":"Raytracing","image":"http://localhost:4000/assets/images/ray_glass.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/raytracing/"},"url":"http://localhost:4000/projects/raytracing/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -76,6 +76,7 @@
         View Code
       </a>
       
+      
     </div>
   </div>
 </section>
@@ -83,23 +84,6 @@
 <!-- Project Content -->
 <article class="project-content">
   <h2 id="overview">Overview</h2>
-
-<p>In this project I worked on a template that had the bare basics of a ray tracer. Going into this, I hadn’t worked with a raytracer before, apart from raytracing in one weekend for preperation for the project. I started with simple features like point lights and directional light and eventually I worked my way towards more impressive features. This includes an area light:</p>
-
-<p><img src="/assets/images/ray_areal.png" alt="" /></p>
-
-<p>Glossy reflections:</p>
-
-<p><img src="/assets/images/ray_refglos.png" alt="" /></p>
-
-<p>And reprojection. The top image shows how noisy the image looks without reprojection, and the bottom image is noise-free because of reprojection:</p>
-
-<p><img src="/assets/images/ray_norepr.png" alt="" />
-<img src="/assets/images/ray_repr.png" alt="" /></p>
-
-<p>And finally, the most impressive feature I worked on during the block was glass. The glass sphere below features snell’s law for refraction and fresnel equations for reflection. The reflection is most noticable around the edges of the sphere in the image.</p>
-
-<p><img src="/assets/images/ray_glass.png" alt="" /></p>
 
 <p>In this project I worked on a template that had the bare basics of a ray tracer. Going into this, I hadn’t worked with a raytracer before, apart from raytracing in one weekend for preparation for the project. I started with simple features like point lights and directional light and eventually I worked my way towards more impressive features.</p>
 
@@ -114,7 +98,9 @@
   </figure>
 </div>
 
-<p>For reprojection, the difference is dramatic — noisy without it, clean with it:</p>
+<p><br /></p>
+
+<p>I also worked on reprojection, the difference is dramatic — noisy without it, clean with it:</p>
 
 <div class="image-grid grid-2">
   <figure class="image-figure">
@@ -127,20 +113,14 @@
   </figure>
 </div>
 
-<p>Finally, the most impressive feature — glass with Snell’s law for refraction and Fresnel equations for reflection:</p>
+<p><br /></p>
+
+<p>And finally, the most impressive feature I worked on during the block was glass. The glass sphere below features snell’s law for refraction and fresnel equations for reflection. The reflection is most noticable around the edges of the sphere in the image.</p>
 
 <figure class="image-figure">
   <img src="/assets/images/ray_glass.png" alt="Glass sphere" />
   <figcaption class="image-caption">Glass with refraction and reflection</figcaption>
 </figure>
-
-<div class="collage collage-c">
-  <img src="/assets/images/ray_glass.png" alt="Glass sphere" />
-  <img src="/assets/images/ray_areal.png" alt="Area light" />
-  <img src="/assets/images/ray_refglos.png" alt="Glossy reflections" />
-  <img src="/assets/images/ray_norepr.png" alt="Without reprojection" />
-  <img src="/assets/images/ray_repr.png" alt="With reprojection" />
-</div>
 
 </article>
 

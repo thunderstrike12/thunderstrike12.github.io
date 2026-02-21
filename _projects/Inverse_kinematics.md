@@ -14,6 +14,18 @@ github: https://github.com/yourusername/ai-dashboard
 featured: true
 ---
 
+## Overview
+
+In this project I built an Inverse Kinematics system from scratch using the FABRIK algorithm. Going into this, I had some experience with forward kinematics but hadn't implemented a full IK solution before. I started with basic 2D forward kinematics to understand segment chains, then moved on to the full 3D FABRIK implementation. Eventually I expanded the system to load rigs directly from Blender and animate them procedurally.
+
+<div class="collage collage-c">
+    <img src="/assets/images/spider_walk.gif" alt="IK arm">
+    <img src="/assets/images/forward_kinematics.gif" alt="Forward kinematics">
+    <img src="/assets/images/human_walk.gif" alt="Walking animation">
+</div>
+
+## Technical Breakdown
+
 ### Introduction
 
 In this post about Inverse Kinematics I will demonstrate how I've made my Inverse Kinematics. An important heads up is that I am using an ECS and the algorithm I used for my Inverse Kinematics is the FABRIK algorithm.

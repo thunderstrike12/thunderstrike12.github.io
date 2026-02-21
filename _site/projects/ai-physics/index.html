@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Motion Graphics Tool</title>
-  <meta name="description" content="Browser-based animation editor for designers and creatives">
+  <title>AI and Physics</title>
+  <meta name="description" content="AI and Physics in BEE">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Motion Graphics Tool | Loek van der Beele</title>
+<title>AI and Physics | Loek van der Beele</title>
 <meta name="generator" content="Jekyll v3.10.0" />
-<meta property="og:title" content="Motion Graphics Tool" />
+<meta property="og:title" content="AI and Physics" />
 <meta name="author" content="Loek van der Beele" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Browser-based animation editor for designers and creatives" />
-<meta property="og:description" content="Browser-based animation editor for designers and creatives" />
+<meta name="description" content="AI and Physics in BEE" />
+<meta property="og:description" content="AI and Physics in BEE" />
 <link rel="canonical" href="http://localhost:4000/projects/ai-physics/" />
 <meta property="og:url" content="http://localhost:4000/projects/ai-physics/" />
 <meta property="og:site_name" content="Loek van der Beele" />
-<meta property="og:image" content="http://localhost:4000/" />
+<meta property="og:image" content="http://localhost:4000/assets/images/ai_pathfollow.gif" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-02-21T15:03:50+01:00" />
+<meta property="article:published_time" content="2026-02-21T16:56:12+01:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4000/" />
-<meta property="twitter:title" content="Motion Graphics Tool" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/ai_pathfollow.gif" />
+<meta property="twitter:title" content="AI and Physics" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T15:03:50+01:00","datePublished":"2026-02-21T15:03:50+01:00","description":"Browser-based animation editor for designers and creatives","headline":"Motion Graphics Tool","image":"http://localhost:4000/","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/ai-physics/"},"url":"http://localhost:4000/projects/ai-physics/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-21T16:56:12+01:00","datePublished":"2026-02-21T16:56:12+01:00","description":"AI and Physics in BEE","headline":"AI and Physics","image":"http://localhost:4000/assets/images/ai_pathfollow.gif","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/ai-physics/"},"url":"http://localhost:4000/projects/ai-physics/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -48,33 +48,34 @@
       ← Back to Projects
     </a>
     
-    <h1>Motion Graphics Tool</h1>
+    <h1>AI and Physics</h1>
     
     <div class="project-meta">
-      <span class="project-category-badge">Creative</span>
+      <span class="project-category-badge">AI and Physics</span>
       <div class="card-tags">
         
-        <span class="tag">TypeScript</span>
+        <span class="tag">BEE</span>
         
-        <span class="tag">Canvas API</span>
+        <span class="tag">C++</span>
         
-        <span class="tag">GSAP</span>
+        <span class="tag">november 2024</span>
         
       </div>
     </div>
     
-    <p class="project-description">Browser-based animation editor for designers and creatives</p>
+    <p class="project-description">AI and Physics in BEE</p>
     
     <div class="project-links">
       
-      <a href="https://motion-tool-demo.com" class="btn btn-primary" target="_blank">
+      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
         Live Demo
       </a>
       
       
-      <a href="https://github.com/yourusername/motion-tool" class="btn btn-secondary" target="_blank">
+      <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
         View Code
       </a>
+      
       
     </div>
   </div>
@@ -84,20 +85,28 @@
 <article class="project-content">
   <h2 id="overview">Overview</h2>
 
-<p>Intuitive animation tool allowing designers to create stunning motion graphics directly in the browser with timeline editing and export capabilities.</p>
+<p>For this project I worked in BEE, an engine provided by teachers. It uses an ECS, and this was my first time working with one. In the project, I constructed an A* pathfinding algorithm. But in order for it to work, I start by triangulating a map so that I can make a graph for the agents. On this graph, I can run the A* algorithm.</p>
 
-<h2 id="key-features">Key Features</h2>
+<div class="image-grid grid-2">
+  <figure class="image-figure">
+    <img src="/assets/images/ai_triangulation.png" alt="Triangulation" />
+    <figcaption class="image-caption">Triangulation</figcaption>
+  </figure>
+  <figure class="image-figure">
+    <img src="/assets/images/ai_path_following.gif" alt="A*" />
+    <figcaption class="image-caption">A* in action</figcaption>
+  </figure>
+</div>
 
-<ul>
-  <li>Keyframe-based timeline editor</li>
-  <li>Layer management system</li>
-  <li>Export to GIF, MP4, and WebM</li>
-  <li>Template library for quick starts</li>
-</ul>
+<p><br /></p>
 
-<h2 id="technical-approach">Technical Approach</h2>
+<p>After that I worked on the physics, since our agents are still clipping through the wall. The physics work well with the pathfinding, but is not limited to it.</p>
 
-<p>Built with TypeScript for type safety, Canvas API for rendering, and GSAP for smooth animations. The architecture prioritizes performance for complex animations.</p>
+<div class="collage collage-c">
+    <img src="/assets/images/ai_astar.gif" alt="Forward kinematics" />
+    <img src="/assets/images/ai_pathfollow.gif" alt="IK arm" />
+    <img src="/assets/images/ai_physics-showcase.gif" alt="Walking animation" />
+</div>
 
 </article>
 

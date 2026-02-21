@@ -1,31 +1,30 @@
 ---
 layout: project
-title: E-Commerce Platform
-description: Modern shopping experience with seamless checkout and inventory management
-category: Full Stack
-icon: 🛒
-image: ""
+title: Brawl Bunnies
+description: Gameplay & Rendering
+category: Rendering
+image: "/assets/images/dust_cpp.gif"
+icon: 🤖
+color: color-purple
 tags:
-  - Next.js
-  - Node.js
-  - PostgreSQL
-  - Stripe
-github: https://github.com/yourusername/ecommerce
-live: https://demo-shop.com
+  - Template/Unreal
+  - C++
+  - june 2024
+itch: https://buas.itch.io/brawl-bunnies
 featured: true
 ---
 
 ## Overview
 
-Full-featured e-commerce solution with cart management, Stripe integration, user authentication, and admin dashboard for inventory management.
+In this team project I worked on a [videoball](https://store.steampowered.com/app/277390/VIDEOBALL/) inspired game with 12 people. I worked on the gameplay which is partly showcased on the itch page, but more importantly, we wanted a very dusty look to the game, so I worked on dust clouds. I started with a prototype in the template engine I had used in a previous raytracing project, also featured on this site. This time, instead of raytracing I marched through a 3D noise. After succesfully making a prototype, I moved a version of it to UE5. On the itch page the dust can be seen in action.
 
-## Key Features
-
-- Responsive product catalog with filtering
-- Real-time inventory tracking
-- Secure payment processing via Stripe
-- Admin dashboard for order management
-
-## Technical Stack
-
-Built with Next.js for the frontend, Node.js/Express backend, PostgreSQL database, and integrated with Stripe for payments.
+<div class="image-grid grid-2">
+  <figure class="image-figure">
+    <img src="/assets/images/dust_cpp.gif" alt="prototype">
+    <figcaption class="image-caption">Prototype</figcaption>
+  </figure>
+  <figure class="image-figure">
+    <img src="/assets/images/dust_unreal.gif" alt="UE5">
+    <figcaption class="image-caption">In UE5</figcaption>
+  </figure>
+</div>
