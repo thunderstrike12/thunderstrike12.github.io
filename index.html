@@ -24,7 +24,7 @@ title: Home
       {% endif %}
     </div>
     
-    <!--<span class="hero-label">{{ site.author.tagline }}</span>-->
+    <span class="hero-label">{{ site.author.tagline }}</span>
     <h1>{{ site.author.name }}</h1>
     <p class="hero-bio">{{ site.author.bio }}</p>
     
@@ -73,6 +73,16 @@ title: Home
         <div class="card-title-preview">
           <h4>{{ project.title }}</h4>
           <div class="card-tags">
+            {% if project.team %}
+              {% if project.team == 1 %}
+              <span class="tag tag-team solo">Solo</span>
+              {% else %}
+              <span class="tag tag-team team">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+                {{ project.team }}
+              </span>
+              {% endif %}
+            {% endif %}
             {% assign tag_colors = "tag-blue,tag-green,tag-purple,tag-orange,tag-pink,tag-teal" | split: "," %}
             {% for tag in project.tags limit:3 %}
             {% assign color_index = forloop.index0 | modulo: 6 %}
@@ -93,7 +103,7 @@ title: Home
 <!-- Contact -->
 <section id="contact" class="contact-section">
   <h2>Let's Connect</h2>
-  <p></p>
+  <p>Have a project in mind? I'd love to hear about it.</p>
   <div class="social-links">
     <a href="{{ site.social.email }}" class="social-link" aria-label="Email">
       {% include icons/mail.svg %}

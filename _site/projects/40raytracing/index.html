@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raytracing</title>
+  <meta name="description" content="Raytracing in a Template project">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Raytracing | Loek van der Beele</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Raytracing" />
+<meta name="author" content="Loek van der Beele" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Raytracing in a Template project" />
+<meta property="og:description" content="Raytracing in a Template project" />
+<link rel="canonical" href="http://localhost:4000/projects/40raytracing/" />
+<meta property="og:url" content="http://localhost:4000/projects/40raytracing/" />
+<meta property="og:site_name" content="Loek van der Beele" />
+<meta property="og:image" content="http://localhost:4000/assets/images/ray_glass.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-02-22T15:30:08+01:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/ray_glass.png" />
+<meta property="twitter:title" content="Raytracing" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-22T15:30:08+01:00","datePublished":"2026-02-22T15:30:08+01:00","description":"Raytracing in a Template project","headline":"Raytracing","image":"http://localhost:4000/assets/images/ray_glass.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/40raytracing/"},"url":"http://localhost:4000/projects/40raytracing/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<body>
+  <!-- Header -->
+<header class="header">
+  <a href="/" class="logo">Loek van der Beele</a>
+  <nav class="nav">
+    <a href="/#work">Work</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://github.com/thunderstrike12">GitHub</a>
+  </nav>
+</header>
+
+<!-- Project Hero -->
+<section class="project-hero">
+  <div class="project-hero-inner">
+    <a href="/#work" class="back-link">
+      ← Back to Projects
+    </a>
+    
+    <h1>Raytracing</h1>
+    
+    <div class="project-meta">
+      <span class="project-category-badge">Rendering</span>
+      
+        
+        <span class="tag tag-team solo" style="background: var(--bg-dark); color: var(--text);">Solo</span>
+        
+      
+      <div class="card-tags">
+        
+        <span class="tag">Template</span>
+        
+        <span class="tag">C++</span>
+        
+        <span class="tag">april 2024</span>
+        
+      </div>
+    </div>
+    
+    <p class="project-description">Raytracing in a Template project</p>
+    
+    <div class="project-links">
+      
+      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
+        Live Demo
+      </a>
+      
+      
+      <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
+        View Code
+      </a>
+      
+      
+    </div>
+  </div>
+</section>
+
+<!-- Project Content -->
+<article class="project-content">
+  <h2 id="overview">Overview</h2>
+
+<p>In this project I worked on a template that had the bare basics of a ray tracer. Going into this, I hadn’t worked with a raytracer before, apart from raytracing in one weekend for preparation for the project. I started with simple features like point lights and directional light and eventually I worked my way towards more impressive features.</p>
+
+<div class="image-grid grid-2">
+  <figure class="image-figure">
+    <img src="/assets/images/ray_areal.png" alt="Area light" />
+    <figcaption class="image-caption">Area Light</figcaption>
+  </figure>
+  <figure class="image-figure">
+    <img src="/assets/images/ray_refglos.png" alt="Glossy reflections" />
+    <figcaption class="image-caption">Glossy Reflections</figcaption>
+  </figure>
+</div>
+
+<p><br /></p>
+
+<p>I also worked on reprojection, the difference is dramatic — noisy without it, clean with it:</p>
+
+<div class="image-grid grid-2">
+  <figure class="image-figure">
+    <img src="/assets/images/ray_norepr.png" alt="Without reprojection" />
+    <figcaption class="image-caption">Without Reprojection</figcaption>
+  </figure>
+  <figure class="image-figure">
+    <img src="/assets/images/ray_repr.png" alt="With reprojection" />
+    <figcaption class="image-caption">With Reprojection</figcaption>
+  </figure>
+</div>
+
+<p><br /></p>
+
+<p>And finally, the most impressive feature I worked on during the block was glass. The glass sphere below features snell’s law for refraction and fresnel equations for reflection. The reflection is most noticable around the edges of the sphere in the image.</p>
+
+<figure class="image-figure">
+  <img src="/assets/images/ray_glass.png" alt="Glass sphere" />
+  <figcaption class="image-caption">Glass with refraction and reflection</figcaption>
+</figure>
+
+</article>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2026 Loek van der Beele</p>
+</footer>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
