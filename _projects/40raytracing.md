@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Raytracing
-team: 1
+team:
 description: Raytracing in a Template project
 category: Rendering
 image: "/assets/images/ray_glass.png"

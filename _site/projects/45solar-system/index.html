@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gravity Simulation</title>
+  <meta name="description" content="Simulating Gravity in Unreal Engine">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Gravity Simulation | Loek van der Beele</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Gravity Simulation" />
+<meta name="author" content="Loek van der Beele" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Simulating Gravity in Unreal Engine" />
+<meta property="og:description" content="Simulating Gravity in Unreal Engine" />
+<link rel="canonical" href="http://localhost:4000/projects/45solar-system/" />
+<meta property="og:url" content="http://localhost:4000/projects/45solar-system/" />
+<meta property="og:site_name" content="Loek van der Beele" />
+<meta property="og:image" content="http://localhost:4000/assets/images/grav_simple_orbit.gif" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-02-22T16:48:40+01:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/grav_simple_orbit.gif" />
+<meta property="twitter:title" content="Gravity Simulation" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-02-22T16:48:40+01:00","datePublished":"2026-02-22T16:48:40+01:00","description":"Simulating Gravity in Unreal Engine","headline":"Gravity Simulation","image":"http://localhost:4000/assets/images/grav_simple_orbit.gif","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/45solar-system/"},"url":"http://localhost:4000/projects/45solar-system/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<body>
+  <!-- Header -->
+<header class="header">
+  <a href="/" class="logo">Loek van der Beele</a>
+  <nav class="nav">
+    <a href="/#work">Work</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://github.com/thunderstrike12">GitHub</a>
+  </nav>
+</header>
+
+<!-- Project Hero -->
+<section class="project-hero">
+  <div class="project-hero-inner">
+    <a href="/#work" class="back-link">
+      ← Back to Projects
+    </a>
+    
+    <h1>Gravity Simulation</h1>
+    
+    <div class="project-meta">
+      <span class="project-category-badge">Physics</span>
+      
+        
+        <span class="tag tag-team solo" style="background: var(--bg-dark); color: var(--text);">Solo</span>
+        
+      
+      <div class="card-tags">
+        
+        <span class="tag">Unreal</span>
+        
+        <span class="tag">C++</span>
+        
+        <span class="tag">October 2025</span>
+        
+      </div>
+    </div>
+    
+    <p class="project-description">Simulating Gravity in Unreal Engine</p>
+    
+    <div class="project-links">
+      
+      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
+        Live Demo
+      </a>
+      
+      
+      <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
+        View Code
+      </a>
+      
+      
+    </div>
+  </div>
+</section>
+
+<!-- Project Content -->
+<article class="project-content">
+  ## Overview
+
+In this project I worked on a gravity simulation, simulating a solar system with ~60 celestial bodies. I implemented multiple ways of calculating gravity, ranging from Newtonian physics to verlet physics and runge kutta 4th order. In order to make sure the simulation is as stable as possible, I started with implementing a simple check to see how far a body deviates from the body it orbits after completing an orbit. This turned out to not help me at all, since it is possible in a perfectly accurate simulation for a body to deviate. Because of this, I came up with a different method. This method was to calculate the mechanical energy in the system every frame. If no energy leaves or enters the solar system (which is the case in my simulation), the mechanical energy should stay the same. With this system in place, it became clear that Newtonian physics caused the least amount of energy loss/gain. 
+
+<br>
+<br>
+
+In order to do some nice tests, I wanted to make a large solar system. Instead of adding every body manually, I decided to make a solar system generator. It starts with creating a sun with a mass. based on this mass, n amount of planets are created, which in turn have n amount of moons, also based on the planets mass. The velocity is then calculated for each of the planets using the circular orbit formula. Slight inaccuracy is added to make the orbit eliptical. The velocity of the moons is calculated in a similar way.
+
+<br>
+<br>
+
+I also added path prediction. The path prediction can be shown either relative to the body it orbits (showing an elipse around the body it orbits), or the path can be drawn in world space (usually resulting in a line going around the sun, regardless of wether it is a moon or planet. This does depend largely on the speed of planets and moons).
+
+<br>
+<br>
+
+All features mentioned are showcased in the video below, starting with solar system generation. Then I show the path prediction (relative to the body they orbit and world space), and finally I show the logging I added which I used to see how much energy was gained/lost. Note that in the video the red debug spheres represent the original position of a celestial body relative to the body it orbits.
+
+<video src="/assets/images/grav_featureshowcase.mp4" autoplay loop muted playsinline></video>
+<figcaption class="image-caption">Gravity simulation feature showcase</figcaption>
+</article>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2026 Loek van der Beele</p>
+</footer>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

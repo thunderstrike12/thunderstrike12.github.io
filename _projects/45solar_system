@@ -1,0 +1,39 @@
+---
+layout: project
+title: Gravity Simulation
+team: 1
+description: Simulating Gravity in Unreal Engine
+category: Physics
+image: "/assets/images/grav_simple_orbit.gif"
+icon: 🤖
+color: color-purple
+tags:
+  - Unreal
+  - C++
+  - October 2025
+github: https://github.com/yourusername/ai-dashboard
+live: https://ai-dashboard-demo.com
+featured: true
+---
+
+## Overview
+
+In this project I worked on a gravity simulation, simulating a solar system with ~60 celestial bodies. I implemented multiple ways of calculating gravity, ranging from Newtonian physics to verlet physics and runge kutta 4th order. In order to make sure the simulation is as stable as possible, I started with implementing a simple check to see how far a body deviates from the body it orbits after completing an orbit. This turned out to not help me at all, since it is possible in a perfectly accurate simulation for a body to deviate. Because of this, I came up with a different method. This method was to calculate the mechanical energy in the system every frame. If no energy leaves or enters the solar system (which is the case in my simulation), the mechanical energy should stay the same. With this system in place, it became clear that Newtonian physics caused the least amount of energy loss/gain. 
+
+<br>
+<br>
+
+In order to do some nice tests, I wanted to make a large solar system. Instead of adding every body manually, I decided to make a solar system generator. It starts with creating a sun with a mass. based on this mass, n amount of planets are created, which in turn have n amount of moons, also based on the planets mass. The velocity is then calculated for each of the planets using the circular orbit formula. Slight inaccuracy is added to make the orbit eliptical. The velocity of the moons is calculated in a similar way.
+
+<br>
+<br>
+
+I also added path prediction. The path prediction can be shown either relative to the body it orbits (showing an elipse around the body it orbits), or the path can be drawn in world space (usually resulting in a line going around the sun, regardless of wether it is a moon or planet. This does depend largely on the speed of planets and moons).
+
+<br>
+<br>
+
+All features mentioned are showcased in the video below, starting with solar system generation. Then I show the path prediction (relative to the body they orbit and world space), and finally I show the logging I added which I used to see how much energy was gained/lost. Note that in the video the red debug spheres represent the original position of a celestial body relative to the body it orbits.
+
+<video src="/assets/images/grav_featureshowcase.mp4" autoplay loop muted playsinline></video>
+<figcaption class="image-caption">Gravity simulation feature showcase</figcaption>
