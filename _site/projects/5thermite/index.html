@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermite</title>
+  <meta name="description" content="AI Programming in a Custom Engine">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Thermite | Loek van der Beele</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Thermite" />
+<meta name="author" content="Loek van der Beele" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="AI Programming in a Custom Engine" />
+<meta property="og:description" content="AI Programming in a Custom Engine" />
+<link rel="canonical" href="http://localhost:4000/projects/5thermite/" />
+<meta property="og:url" content="http://localhost:4000/projects/5thermite/" />
+<meta property="og:site_name" content="Loek van der Beele" />
+<meta property="og:image" content="http://localhost:4000/assets/images/tmt_navmesh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-02T15:10:07+02:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/tmt_navmesh.png" />
+<meta property="twitter:title" content="Thermite" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Loek van der Beele"},"dateModified":"2026-05-02T15:10:07+02:00","datePublished":"2026-05-02T15:10:07+02:00","description":"AI Programming in a Custom Engine","headline":"Thermite","image":"http://localhost:4000/assets/images/tmt_navmesh.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/5thermite/"},"url":"http://localhost:4000/projects/5thermite/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<body>
+  <!-- Header -->
+<header class="header">
+  <a href="/" class="logo">Loek van der Beele</a>
+  <nav class="nav">
+    <a href="/#work">Work</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://github.com/thunderstrike12">GitHub</a>
+  </nav>
+</header>
+
+<!-- Project Hero -->
+<section class="project-hero">
+  <div class="project-hero-inner">
+    <a href="/#work" class="back-link">
+      ← Back to Projects
+    </a>
+    
+    <h1>Thermite</h1>
+    
+    <div class="project-meta">
+      <span class="project-category-badge">AI</span>
+      
+        
+        <span class="tag tag-team team" style="background: var(--bg-dark); color: var(--text);">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+          16
+        </span>
+        
+      
+      <div class="card-tags">
+        
+        <span class="tag">Thermite Engine</span>
+        
+        <span class="tag">C++</span>
+        
+        <span class="tag">november 2025</span>
+        
+      </div>
+    </div>
+    
+    <p class="project-description">AI Programming in a Custom Engine</p>
+    
+    <div class="project-links">
+      
+      <a href="https://ai-dashboard-demo.com" class="btn btn-primary" target="_blank">
+        Live Demo
+      </a>
+      
+      
+      <a href="https://github.com/yourusername/ai-dashboard" class="btn btn-secondary" target="_blank">
+        View Code
+      </a>
+      
+      
+    </div>
+  </div>
+</section>
+
+<!-- Project Content -->
+<article class="project-content">
+  <h2 id="overview">Overview</h2>
+
+<p>In this custom engine project I worked mainly on navigation for AI. The game is set in space, and the enemies are supposed to walk on the asteroids that are floating around. In order for the enemies to do that, I made a navmesh system that could make a navmesh from voxel data (64trees). There were a few issues with the initial concept. First of all, generation took very long, and caused major lagspikes. To fix this, I do the navmesh generation over time. And, if I’m doing the generation over time anyway, I might aswell first go one level higher in the 64tree to quickly generate a lower level of detail mesh wich the enemy can immediately start using while a higher level of detail mesh is being made.</p>
+
+<p>Also, because on asteroids there isn’t really an ‘up’, I had to come up with a way to know where the ground was, so that the enemy always faces the ground. The most straight forward way to know what ‘up’ is, is by looking at the ground normal. There wasn’t an easy way to compute the normals, because the connections some nodes had created caused a few cases where a simple crossproduct would be inaccurate. To fix these edge cases, I simply average all the normals by comparing them to their neighbours. This was also quite slow, so I also do it over time. All these things together make for quite a nice visualisation, wich can be seen below:</p>
+
+<video src="/assets/images/tmt_nm_gen.mp4" autoplay="" loop="" muted="" playsinline=""></video>
+<figcaption class="image-caption">navmesh generation over time</figcaption>
+
+<p>And then we can have a procedural walker traverse the navmesh:</p>
+
+<video src="/assets/images/tmt_walk.mp4" autoplay="" loop="" muted="" playsinline=""></video>
+<figcaption class="image-caption">prototype of procedural walker on navmesh</figcaption>
+
+</article>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2026 Loek van der Beele</p>
+</footer>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
